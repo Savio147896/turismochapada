@@ -1,0 +1,30 @@
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Arquivos temporários
+*.tmp
+*.temp
+
+# Node modules (se necessário no futuro)
+node_modules/
+
+# Arquivos de ambiente
+.env
+.env.local
+
+# Arquivos de backup
+*.bak
+*.backup
+
+# Arquivos de cache
+.cache/ 
