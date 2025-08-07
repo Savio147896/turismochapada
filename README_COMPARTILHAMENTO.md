@@ -4,17 +4,17 @@
 
 ### ✅ **LINK PRINCIPAL PARA COMPARTILHAR:**
 ```
-http://192.168.1.101:8000
+http://192.168.1.101:8000/
 ```
 
 ### 📱 Links Alternativos:
-- **Acesso Local:** `http://localhost:8000`
+- **Acesso Local:** `http://localhost:8000/`
 - **Teste de Acesso:** `http://192.168.1.101:8000/teste_acesso.html`
 
 ## 🎯 Como Compartilhar
 
 ### 1. **Rede Local (Mais Fácil)**
-- Compartilhe o link: `http://192.168.1.101:8000`
+- Compartilhe o link: `http://192.168.1.101:8000/`
 - Funciona para pessoas na mesma rede Wi-Fi
 - Não requer configurações adicionais
 

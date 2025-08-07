@@ -1,27 +1,19 @@
-# 🌿 URL Final Atualizada - Modo Nativo Chapada dos Guimarães
+# 🌿 Link da Versão Mais Atualizada - Modo Nativo
 
-## 🔗 **URL PRINCIPAL PARA COMPARTILHAR:**
+## 🔗 **LINK PRINCIPAL PARA ACESSO:**
 
 ```
-https://savio147896.github.io/turismochapada/
+http://192.168.1.101:8000/
 ```
 
-## ✅ **Status do Deploy:**
-
-- ✅ **Deploy Forçado:** Commit 4f7f837 enviado
-- ✅ **Workflow Atualizado:** GitHub Actions v4
-- ✅ **Branch Principal:** main
-- ✅ **Todas as Funcionalidades:** Implementadas
-- ⏳ **Tempo de Atualização:** 2-5 minutos
-
-## ✅ **Versão Completa Implementada:**
+## ✅ **Versão Mais Completa Disponível:**
 
 ### 🌿 **Modo Nativo - Tema Verde Natural**
 - ✅ Background gradiente verde natural
 - ✅ Sidebar com tema nativo
 - ✅ Botões com cores naturais
 - ✅ Ícones diferenciados por categoria
-- ✅ Título atualizado: "Modo Nativo - Chapada dos Guimarães"
+- ✅ Título: "Modo Nativo - Chapada dos Guimarães"
 
 ### ⭐ **Sistema de Favoritos Completo**
 - ✅ Adicionar pontos aos favoritos
@@ -60,7 +52,7 @@ https://savio147896.github.io/turismochapada/
 
 ## 🚀 **Como Acessar:**
 
-1. **Link Direto:** https://savio147896.github.io/turismochapada/
+1. **Link Direto:** http://192.168.1.101:8000/
 2. **Compartilhamento:** Use o link acima para compartilhar
 3. **Dispositivos:** Funciona em desktop, tablet e mobile
 4. **Navegadores:** Chrome, Firefox, Safari, Edge
@@ -77,9 +69,9 @@ https://savio147896.github.io/turismochapada/
 - **Framework:** HTML5 + CSS3 + JavaScript
 - **Mapa:** Leaflet.js
 - **Ícones:** Font Awesome
-- **Deploy:** GitHub Pages (workflow atualizado)
+- **Servidor:** Python HTTP Server
 - **Storage:** localStorage para favoritos
-- **Branch:** main
+- **IP Local:** 192.168.1.101:8000
 
 ## 📞 **Suporte:**
 
@@ -87,21 +79,15 @@ https://savio147896.github.io/turismochapada/
 - **Issues:** Reporte problemas no GitHub
 - **Versão:** Modo Nativo v2.0 - Completa
 
-## 🎯 **Status do Deploy:**
+## 🎯 **Status:**
 
-- ✅ **Workflow Atualizado:** GitHub Actions v4
-- ✅ **Branch Principal:** main
-- ✅ **Deploy Automático:** Ativo
+- ✅ **Servidor Ativo:** Rodando em http://192.168.1.101:8000/
 - ✅ **Todas as Funcionalidades:** Implementadas
 - ✅ **Tema Nativo:** Aplicado
 - ✅ **Sistema de Favoritos:** Funcional
-- ✅ **Deploy Forçado:** Commit 4f7f837
-
-## ⏱️ **Tempo de Atualização:**
-
-O deploy pode levar de 2 a 5 minutos para ser concluído. Se a versão antiga ainda aparecer, aguarde alguns minutos e recarregue a página.
+- ✅ **Versão Mais Atualizada:** Disponível
 
 ---
 
 **🌿 Modo Nativo - Chapada dos Guimarães**  
-*Sistema completo de turismo com tema natural e favoritos - Versão Final Atualizada* 
+*Sistema completo de turismo com tema natural e favoritos - Versão Mais Atualizada*
