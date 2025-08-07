@@ -1,0 +1,5 @@
+Versão: Modo Nativo v2.0 - Completa
+Data: 07/08/2025 00:30:00
+Commit: 81eee14
+Status: Atualizada
+Funcionalidades: Tema Nativo, Favoritos, Preços, Roteiro Melhorado
