@@ -3,345 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebGIS Chapada dos Guimarães - Turismo</title>
-    
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    <!-- Font Awesome para ícones -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <title>Modo Nativo - Chapada dos Guimarães</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .container {
-            display: flex;
-            height: 100vh;
-        }
-
-        .sidebar {
-            width: 350px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-right: 2px solid rgba(255, 255, 255, 0.2);
-            overflow-y: auto;
-            z-index: 1000;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .main-content {
-            flex: 1;
-            position: relative;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #2c3e50, #34495e);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .map-controls {
-            padding: 20px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .control-group {
-            margin-bottom: 20px;
-        }
-
-        .control-group h3 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .basemap-selector {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .basemap-option {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            background: #f8f9fa;
-            border: 2px solid transparent;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .basemap-option:hover {
-            background: #e9ecef;
-            border-color: #007bff;
-        }
-
-        .basemap-option.active {
-            background: #007bff;
-            color: white;
-            border-color: #0056b3;
-        }
-
-        .basemap-option i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
-
-        .layer-controls {
-            padding: 20px;
-        }
-
-        .layer-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .layer-item:hover {
-            background: #e9ecef;
-        }
-
-        .layer-info {
-            display: flex;
-            align-items: center;
-        }
-
-        .layer-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-            color: white;
-            font-size: 12px;
-        }
-
-        .cachoeiras { background: #3498db; }
-        .hoteis { background: #e74c3c; }
-        .restaurantes { background: #f39c12; }
-        .municipio { background: #27ae60; }
-
-        .layer-name {
-            font-weight: 500;
-            color: #2c3e50;
-        }
-
-        .layer-count {
-            font-size: 12px;
-            color: #6c757d;
-            margin-top: 2px;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 50px;
-            height: 24px;
-            background: #ccc;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .toggle-switch.active {
-            background: #007bff;
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            transition: transform 0.3s ease;
-        }
-
-        .toggle-switch.active::after {
-            transform: translateX(26px);
+            background: linear-gradient(135deg, #2d5016 0%, #4a7c59 50%, #8fbc8f 100%);
+            background-attachment: fixed;
         }
 
         #map {
-            height: 100%;
+            height: 100vh;
             width: 100%;
         }
 
-        .legend {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 300px;
+            height: 100vh;
+            background: linear-gradient(135deg, #2d5016 0%, #4a7c59 100%);
+            color: #f4f4f4;
+            padding: 20px;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.3);
+            overflow-y: auto;
             z-index: 1000;
-            min-width: 200px;
+            border-right: 3px solid #8fbc8f;
         }
 
-        .legend h4 {
-            margin-bottom: 10px;
-            color: #2c3e50;
-            font-size: 14px;
+        .sidebar h2 {
+            margin: 0 0 20px 0;
+            text-align: center;
+            font-size: 1.5em;
+            color: #f4f4f4;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
             font-weight: 600;
+        }
+
+        .layer-control {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(143, 188, 143, 0.15);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(143, 188, 143, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .layer-control:hover {
+            background: rgba(143, 188, 143, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .layer-control label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .layer-control input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .legend h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+            color: #fff;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
             margin-bottom: 8px;
-            font-size: 12px;
+            font-size: 0.9em;
         }
 
-        .legend-color {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
+        .legend-item i {
             margin-right: 8px;
+            font-size: 1.2em;
         }
 
-        .info-panel {
-            position: absolute;
-            top: 20px;
-            left: 370px;
-            background: rgba(255, 255, 255, 0.95);
+        /* Estilos para ícones customizados */
+        .custom-icon {
+            background: transparent !important;
+            border: none !important;
+        }
+
+        .leaflet-marker-icon {
+            transition: transform 0.2s ease;
+        }
+
+        .leaflet-marker-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* Estilos para modo de transporte */
+        .transport-mode-section {
+            margin: 15px 0;
             padding: 15px;
+            background: rgba(255,255,255,0.1);
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            max-width: 300px;
-            display: none;
+            backdrop-filter: blur(10px);
         }
 
-        .info-panel h4 {
-            color: #2c3e50;
-            margin-bottom: 10px;
+        .transport-mode-section h4 {
+            margin: 0 0 10px 0;
+            font-size: 1em;
+            color: #fff;
+        }
+
+        .transport-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: space-between;
+        }
+
+        .transport-btn {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
             font-size: 16px;
         }
 
-        .info-panel p {
-            color: #6c757d;
-            font-size: 14px;
-            line-height: 1.4;
+        .transport-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
         }
 
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            z-index: 2000;
+        .transport-btn.active {
+            background: #4CAF50;
+            border-color: #45a049;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
         }
 
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: 100%;
-                position: absolute;
-                z-index: 2000;
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                width: 100%;
-            }
-
-            .info-panel {
-                left: 20px;
-                right: 20px;
-                max-width: none;
-            }
+        .route-step {
+            background: rgba(255,255,255,0.1);
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 12px;
         }
 
-        /* Estilos para popups personalizados */
-        .custom-popup .leaflet-popup-content-wrapper {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        .route-step .step-instruction {
+            font-weight: bold;
+            color: #4CAF50;
         }
 
-        .custom-popup .leaflet-popup-content {
+        .route-step .step-distance {
+            color: rgba(255,255,255,0.8);
+            font-size: 11px;
+        }
+
+        /* Estilos para tooltips customizados */
+        .custom-tooltip {
+            background: transparent;
+            color: #2c3e50;
+            border: none;
+            border-radius: 0;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-shadow: 
+                0 0 4px rgba(255, 255, 255, 1),
+                0 0 8px rgba(255, 255, 255, 1),
+                0 0 12px rgba(255, 255, 255, 0.8),
+                0 1px 2px rgba(0, 0, 0, 0.3),
+                0 2px 4px rgba(0, 0, 0, 0.2);
+            box-shadow: none;
+            backdrop-filter: none;
+            letter-spacing: 0.5px;
+        }
+
+        .custom-tooltip::before {
+            display: none;
+        }
+
+        /* Estilos para popups customizados */
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .leaflet-popup-content {
             margin: 0;
             padding: 0;
-        }
-
-        .popup-content {
-            padding: 15px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-width: 250px;
         }
 
         .popup-header {
-            border-bottom: 2px solid #3498db;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px 12px 0 0;
+            margin: 0;
         }
 
-        .popup-header h3 {
-            margin: 0;
-            color: #2c3e50;
-            font-size: 18px;
-            font-weight: 600;
+        .popup-info {
+            padding: 20px;
+            background: white;
+            border-radius: 0 0 12px 12px;
         }
 
         .popup-info p {
             margin: 8px 0;
-            color: #34495e;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
-        .popup-info strong {
-            color: #2c3e50;
-            font-weight: 600;
+            line-height: 1.5;
         }
 
         .popup-info a {
-            color: #3498db;
+            color: #667eea;
             text-decoration: none;
             font-weight: 500;
         }
@@ -349,501 +238,2254 @@
         .popup-info a:hover {
             text-decoration: underline;
         }
+
+        /* Estilos para seção de avaliações */
+        .rating-section {
+            margin: 15px 0;
+            padding: 12px 0;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .stars-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .stars-container i {
+            color: #ffd700;
+            font-size: 14px;
+        }
+
+        .rating-text {
+            margin-left: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Estilos para seção de informações adicionais */
+        .additional-info-section {
+            margin: 15px 0 0 0;
+            padding: 12px 0;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px 0;
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 13px;
+            min-width: 100px;
+            display: flex;
+            align-items: center;
+        }
+
+        .accessibility-icons,
+        .pet-friendly-icons,
+        .trail-icons {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .accessibility-icons i,
+        .pet-friendly-icons i,
+        .trail-icons i {
+            transition: transform 0.2s ease;
+        }
+
+        .accessibility-icons i:hover,
+        .pet-friendly-icons i:hover,
+        .trail-icons i:hover {
+            transform: scale(1.2);
+        }
+
+        /* Estilos para o sistema de roteiro */
+        .itinerary-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(143, 188, 143, 0.15);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(143, 188, 143, 0.3);
+        }
+
+        .itinerary-section h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.1em;
+            color: #fff;
+            text-align: center;
+        }
+
+        .itinerary-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .itinerary-btn {
+            flex: 1;
+            padding: 10px 14px;
+            background: rgba(143, 188, 143, 0.3);
+            border: 1px solid rgba(143, 188, 143, 0.5);
+            color: #f4f4f4;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .itinerary-btn:hover {
+            background: rgba(143, 188, 143, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(143, 188, 143, 0.3);
+        }
+
+        .itinerary-btn.active {
+            background: #8fbc8f;
+            border-color: #6b8e6b;
+            box-shadow: 0 4px 12px rgba(143, 188, 143, 0.4);
+            color: #2d5016;
+            font-weight: 600;
+        }
+
+        .itinerary-btn#finalizeItinerary {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            border-color: #FF6B6B;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .itinerary-btn#finalizeItinerary:hover {
+            background: linear-gradient(135deg, #FF5252, #FF7043);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+
+        .itinerary-list {
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        .itinerary-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .itinerary-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .itinerary-item-info {
+            flex: 1;
+        }
+
+        .itinerary-item-name {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .itinerary-item-type {
+            font-size: 10px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .itinerary-item-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .itinerary-action-btn {
+            padding: 4px 6px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .itinerary-action-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .itinerary-action-btn.remove {
+            background: rgba(244, 67, 54, 0.8);
+        }
+
+        .itinerary-action-btn.remove:hover {
+            background: rgba(244, 67, 54, 1);
+        }
+
+        /* Estilos para Favoritos */
+        .favorites-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(143, 188, 143, 0.15);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(143, 188, 143, 0.3);
+        }
+
+        .favorites-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .favorites-btn {
+            flex: 1;
+            padding: 8px 12px;
+            background: rgba(233, 30, 99, 0.3);
+            border: 1px solid rgba(233, 30, 99, 0.5);
+            color: #f4f4f4;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .favorites-btn:hover {
+            background: rgba(233, 30, 99, 0.5);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(233, 30, 99, 0.3);
+        }
+
+        .favorites-list {
+            max-height: 150px;
+            overflow-y: auto;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        .favorite-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 10px;
+            margin-bottom: 6px;
+            background: rgba(233, 30, 99, 0.1);
+            border-radius: 6px;
+            font-size: 11px;
+            border-left: 3px solid #e91e63;
+        }
+
+        .favorite-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .favorite-item-info {
+            flex: 1;
+        }
+
+        .favorite-item-name {
+            font-weight: 600;
+            color: #f4f4f4;
+        }
+
+        .favorite-item-type {
+            font-size: 9px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .favorite-item-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .favorite-action-btn {
+            padding: 3px 5px;
+            background: rgba(233, 30, 99, 0.3);
+            border: none;
+            color: #f4f4f4;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 9px;
+        }
+
+        .favorite-action-btn:hover {
+            background: rgba(233, 30, 99, 0.5);
+        }
+
+        .favorite-action-btn.remove {
+            background: rgba(244, 67, 54, 0.8);
+        }
+
+        .favorite-action-btn.remove:hover {
+            background: rgba(244, 67, 54, 1);
+        }
+
+        /* Estilo para botão de favorito nos popups */
+        .favorite-btn {
+            background: rgba(233, 30, 99, 0.2);
+            border: 1px solid rgba(233, 30, 99, 0.4);
+            color: #e91e63;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .favorite-btn:hover {
+            background: rgba(233, 30, 99, 0.4);
+            transform: scale(1.05);
+        }
+
+        .favorite-btn.active {
+            background: #e91e63;
+            color: white;
+        }
+
+        .popup-actions {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .itinerary-summary {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            font-size: 11px;
+        }
+
+        .itinerary-summary p {
+            margin: 5px 0;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .distance-info {
+            color: #4CAF50;
+            font-weight: 600;
+        }
+
+        /* Estilos para marcadores de roteiro */
+        .itinerary-marker {
+            background: #4CAF50 !important;
+            border: 3px solid #fff !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+        }
+
+        .itinerary-marker i {
+            color: #fff !important;
+        }
+
+        /* Estilos para linhas de roteiro - REMOVIDO */
+        /* A linha pontilhada foi removida conforme solicitado */
+
+        /* Estilos para tabela de roteiro */
+        .itinerary-table-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .itinerary-table-section h4 {
+            margin: 0 0 10px 0;
+            font-size: 1em;
+            color: #fff;
+            text-align: center;
+        }
+
+        .table-container {
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        .itinerary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            color: white;
+        }
+
+        .itinerary-table th {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 6px;
+            text-align: center;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .itinerary-table td {
+            padding: 6px 4px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .itinerary-table tbody tr:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .time-input {
+            width: 60px;
+            padding: 2px 4px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 3px;
+            color: white;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        .time-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background: rgba(255,255,255,0.3);
+        }
+
+        .distance-cell {
+            color: #4CAF50;
+            font-weight: 600;
+        }
+
+        .time-cell {
+            color: #ffd700;
+            font-weight: 600;
+        }
+
+        .price-cell {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .next-point-cell {
+            color: #3498db;
+            font-weight: 600;
+            font-size: 11px;
+        }
+
+        /* Estilos para informações de preços */
+        .price-info {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .price-info span {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            #map {
+                height: calc(100vh - 300px);
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="sidebar">
-            <div class="header">
-                <h1><i class="fas fa-map-marked-alt"></i> Chapada dos Guimarães</h1>
-                <p>WebGIS Turístico</p>
-            </div>
+    <div class="sidebar">
+        <h2>🌿 Modo Nativo - Chapada dos Guimarães</h2>
+        
+        <div class="layer-control">
+            <label>
+                <input type="checkbox" id="cachoeiras" checked>
+                <i class="fas fa-water" style="color: #3498db; margin-right: 5px;"></i>
+                Cachoeiras
+            </label>
+        </div>
+        
+        <div class="layer-control">
+            <label>
+                <input type="checkbox" id="hoteis" checked>
+                <i class="fas fa-bed" style="color: #e74c3c; margin-right: 5px;"></i>
+                Hotéis
+            </label>
+        </div>
+        
+        <div class="layer-control">
+            <label>
+                <input type="checkbox" id="restaurantes" checked>
+                <i class="fas fa-utensils" style="color: #f39c12; margin-right: 5px;"></i>
+                Restaurantes
+            </label>
+        </div>
 
-            <div class="map-controls">
-                <div class="control-group">
-                    <h3><i class="fas fa-layer-group"></i> Mapas de Fundo</h3>
-                    <div class="basemap-selector">
-                        <div class="basemap-option active" data-basemap="osm">
-                            <i class="fas fa-map"></i>
-                            OpenStreetMap
-                        </div>
-                        <div class="basemap-option" data-basemap="satellite">
-                            <i class="fas fa-satellite"></i>
-                            Imagem de Satélite
-                        </div>
-                        <div class="basemap-option" data-basemap="dark">
-                            <i class="fas fa-moon"></i>
-                            Tema Escuro
-                        </div>
-                    </div>
-                </div>
+        <div class="legend">
+            <h3>📋 Legenda</h3>
+            <div class="legend-item">
+                <i class="fas fa-water" style="color: #3498db;"></i>
+                Cachoeiras
             </div>
+            <div class="legend-item">
+                <i class="fas fa-bed" style="color: #e74c3c;"></i>
+                Hotéis
+            </div>
+            <div class="legend-item">
+                <i class="fas fa-utensils" style="color: #f39c12;"></i>
+                Restaurantes
+            </div>
+            <div class="legend-item">
+                <i class="fas fa-heart" style="color: #e91e63;"></i>
+                Favoritos
+            </div>
+        </div>
 
-            <div class="layer-controls">
-                <h3><i class="fas fa-layers"></i> Camadas</h3>
-                <p style="font-size: 12px; color: #6c757d; margin-bottom: 15px; font-style: italic;">
-                    <i class="fas fa-info-circle"></i> Município fica por baixo para facilitar o clique nos pontos
-                </p>
-                <div class="layer-item" data-layer="municipio">
-                    <div class="layer-info">
-                        <div class="layer-icon municipio">
-                            <i class="fas fa-map"></i>
-                        </div>
-                        <div>
-                            <div class="layer-name">Município</div>
-                            <div class="layer-count">1 polígono</div>
-                        </div>
-                    </div>
-                    <div class="toggle-switch active"></div>
-                </div>
-                <div class="layer-item" data-layer="cachoeiras">
-                    <div class="layer-info">
-                        <div class="layer-icon cachoeiras">
-                            <i class="fas fa-water"></i>
-                        </div>
-                        <div>
-                            <div class="layer-name">Cachoeiras</div>
-                            <div class="layer-count">20 pontos</div>
-                        </div>
-                    </div>
-                    <div class="toggle-switch active"></div>
-                </div>
-                <div class="layer-item" data-layer="hoteis">
-                    <div class="layer-info">
-                        <div class="layer-icon hoteis">
-                            <i class="fas fa-bed"></i>
-                        </div>
-                        <div>
-                            <div class="layer-name">Hotéis</div>
-                            <div class="layer-count">15 pontos</div>
-                        </div>
-                    </div>
-                    <div class="toggle-switch active"></div>
-                </div>
-                <div class="layer-item" data-layer="restaurantes">
-                    <div class="layer-info">
-                        <div class="layer-icon restaurantes">
-                            <i class="fas fa-utensils"></i>
-                        </div>
-                        <div>
-                            <div class="layer-name">Restaurantes</div>
-                            <div class="layer-count">25 pontos</div>
-                        </div>
-                    </div>
-                    <div class="toggle-switch active"></div>
+        <!-- Seção de Favoritos -->
+        <div class="favorites-section">
+            <h3>⭐ Favoritos</h3>
+            <div class="favorites-controls">
+                <button class="favorites-btn" id="showFavorites">
+                    <i class="fas fa-heart"></i> Ver Favoritos
+                </button>
+                <button class="favorites-btn" id="clearFavorites">
+                    <i class="fas fa-trash"></i> Limpar
+                </button>
+            </div>
+            <div class="favorites-list" id="favoritesList">
+                <div style="text-align: center; color: rgba(255,255,255,0.7); font-size: 12px; padding: 20px;">
+                    Clique no coração nos popups para adicionar favoritos
                 </div>
             </div>
         </div>
 
-        <div class="main-content">
-            <div id="map"></div>
+        <!-- Seção do Roteiro de Viagem -->
+        <div class="itinerary-section">
+            <h3>🗺️ Roteiro de Viagem</h3>
             
-            <div class="legend">
-                <h4><i class="fas fa-info-circle"></i> Legenda</h4>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #27ae60;"></div>
-                    <span>Município</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #3498db;"></div>
-                    <span>Cachoeiras</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #e74c3c;"></div>
-                    <span>Hotéis</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #f39c12;"></div>
-                    <span>Restaurantes</span>
+            <div class="itinerary-controls">
+                <button class="itinerary-btn" id="toggleItineraryMode">
+                    <i class="fas fa-plus"></i> Adicionar
+                </button>
+                <button class="itinerary-btn" id="clearItinerary">
+                    <i class="fas fa-trash"></i> Limpar
+                </button>
+                <button class="itinerary-btn" id="showItineraryTable">
+                    <i class="fas fa-table"></i> Escolher Roteiro
+                </button>
+                <button class="itinerary-btn" id="finalizeItinerary" style="display: none;">
+                    <i class="fas fa-map-marked-alt"></i> Enviar para Google Maps
+                </button>
+            </div>
+
+            <!-- Seleção de Modo de Transporte -->
+            <div class="transport-mode-section">
+                <h4>🚗 Modo de Transporte</h4>
+                <div class="transport-buttons">
+                    <button class="transport-btn active" data-mode="driving-car" title="Carro">
+                        <i class="fas fa-car"></i>
+                    </button>
+                    <button class="transport-btn" data-mode="foot-walking" title="A pé">
+                        <i class="fas fa-walking"></i>
+                    </button>
+                    <button class="transport-btn" data-mode="cycling-regular" title="Bicicleta">
+                        <i class="fas fa-bicycle"></i>
+                    </button>
+                    <button class="transport-btn" data-mode="motorcycle" title="Moto">
+                        <i class="fas fa-motorcycle"></i>
+                    </button>
                 </div>
             </div>
 
-            <div class="info-panel" id="infoPanel">
-                <h4 id="infoTitle"></h4>
-                <p id="infoDescription"></p>
+            <div class="itinerary-list" id="itineraryList">
+                <div style="text-align: center; color: rgba(255,255,255,0.7); font-size: 12px; padding: 20px;">
+                    Clique em "Adicionar" e depois nos pontos do mapa para criar seu roteiro
+                </div>
+            </div>
+
+            <div class="itinerary-summary" id="itinerarySummary" style="display: none;">
+                <p><strong>📊 Resumo do Roteiro:</strong></p>
+                <p>Pontos: <span id="totalPoints">0</span></p>
+                <p>Distância total: <span id="totalDistance" class="distance-info">0 km</span></p>
+                <p>Tempo estimado: <span id="estimatedTime">0 min</span></p>
+                <p>Modo: <span id="currentMode">Carro</span></p>
+                <div id="routeDetails" style="display: none;">
+                    <p><strong>🗺️ Detalhes da Rota:</strong></p>
+                    <div id="routeSteps"></div>
+                </div>
+            </div>
+
+            <!-- Tabela de Roteiro Detalhado -->
+            <div class="itinerary-table-section" id="itineraryTableSection" style="display: none;">
+                <h4>📋 Roteiro Detalhado</h4>
+                <div class="table-container">
+                    <table class="itinerary-table" id="itineraryTable">
+                        <thead>
+                            <tr>
+                                <th>Ordem</th>
+                                <th>Local</th>
+                                <th>Tempo de Permanência</th>
+                                <th>Preços</th>
+                                <th>Próximo Ponto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itineraryTableBody">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-actions" style="margin-top: 15px; text-align: center;">
+                    <button class="itinerary-btn" id="generateTableImage" style="background: linear-gradient(135deg, #4CAF50, #45a049);">
+                        <i class="fas fa-image"></i> Gerar Imagem da Tabela
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="loading" id="loading">
-        <i class="fas fa-spinner fa-spin"></i> Carregando dados...
-    </div>
+    <div id="map"></div>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
-        // Inicialização do mapa
-        const map = L.map('map').setView([-15.45, -55.75], 10);
-
-        // Definição dos mapas de fundo
-        const basemaps = {
-            osm: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }),
-            satellite: L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-                attribution: '© Google Satellite'
-            }),
-            dark: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                attribution: '© CartoDB'
-            })
-        };
-
-        // Adicionar mapa base inicial
-        basemaps.osm.addTo(map);
-
-        // Controle de mapas de fundo
-        document.querySelectorAll('.basemap-option').forEach(option => {
-            option.addEventListener('click', function() {
-                const basemapType = this.dataset.basemap;
-                
-                // Remover mapa base atual
-                Object.values(basemaps).forEach(basemap => {
-                    map.removeLayer(basemap);
-                });
-                
-                // Adicionar novo mapa base
-                basemaps[basemapType].addTo(map);
-                
-                // Atualizar UI
-                document.querySelectorAll('.basemap-option').forEach(opt => opt.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        // Estilos para as camadas
-        const layerStyles = {
-            municipio: {
-                fillColor: '#27ae60',
-                weight: 2,
-                opacity: 1,
-                color: '#27ae60',
-                fillOpacity: 0.2
-            },
+        // Configurações dos ícones customizados
+        const iconConfigs = {
             cachoeiras: {
-                radius: 8,
-                fillColor: '#3498db',
-                color: '#2980b9',
-                weight: 2,
-                opacity: 1,
-                fillOpacity: 0.8
+                html: '<i class="fas fa-water" style="color: #3498db; font-size: 20px;"></i>',
+                className: 'custom-icon',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
             },
             hoteis: {
-                radius: 6,
-                fillColor: '#e74c3c',
-                color: '#c0392b',
-                weight: 2,
-                opacity: 1,
-                fillOpacity: 0.8
+                html: '<i class="fas fa-bed" style="color: #e74c3c; font-size: 20px;"></i>',
+                className: 'custom-icon',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
             },
             restaurantes: {
-                radius: 6,
-                fillColor: '#f39c12',
-                color: '#e67e22',
-                weight: 2,
-                opacity: 1,
-                fillOpacity: 0.8
+                html: '<i class="fas fa-utensils" style="color: #f39c12; font-size: 20px;"></i>',
+                className: 'custom-icon',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
             }
         };
 
-        // Objetos para armazenar as camadas
-        const layers = {};
-        const layerGroups = {};
+        // Inicialização do mapa
+        const map = L.map('map').setView([-15.4606, -55.7499], 10);
 
-        // Função para carregar dados GeoJSON
-        async function loadGeoJSON(layerName, filePath) {
-            try {
-                console.log(`Carregando camada: ${layerName} de ${filePath}`);
-                const response = await fetch(filePath);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                console.log(`${layerName}: ${data.features ? data.features.length : 0} features carregadas`);
-                
-                // Criar grupo de camadas
-                layerGroups[layerName] = L.layerGroup();
-                
-                // Verificar se há dados válidos
-                if (!data.features || data.features.length === 0) {
-                    console.warn(`${layerName}: Nenhuma feature encontrada`);
-                    return;
-                }
-                
-                // Configurações específicas para cada tipo de camada
-                let geoJsonOptions = {
-                    onEachFeature: function(feature, layer) {
-                        if (feature.properties) {
-                            const popupContent = createDetailedPopupContent(layerName, feature);
-                            layer.bindPopup(popupContent, {
-                                maxWidth: 400,
-                                className: 'custom-popup'
-                            });
-                        }
-                    }
-                };
-                
-                // Configurações específicas para pontos (cachoeiras, hotéis, restaurantes)
-                if (layerName === 'cachoeiras' || layerName === 'hoteis' || layerName === 'restaurantes') {
-                    geoJsonOptions.pointToLayer = function(feature, latlng) {
-                        return L.circleMarker(latlng, layerStyles[layerName]);
-                    };
-                }
-                // Para polígonos (município), usar estilo padrão
-                else if (layerName === 'municipio') {
-                    geoJsonOptions.style = function(feature) {
-                        return layerStyles[layerName];
-                    };
-                }
-                
-                // Usar L.geoJSON para processar os dados
-                const geoJsonLayer = L.geoJSON(data, geoJsonOptions);
-                
-                // Adicionar ao grupo de camadas
-                geoJsonLayer.addTo(layerGroups[layerName]);
-                
-                // Adicionar ao mapa
-                layerGroups[layerName].addTo(map);
-                layers[layerName] = layerGroups[layerName];
-                
-                console.log(`Camada ${layerName} carregada com sucesso!`);
-                
-                // Atualizar contagem na interface
-                updateLayerCount(layerName, data.features ? data.features.length : 0);
-                
-            } catch (error) {
-                console.error(`Erro ao carregar ${layerName}:`, error);
-            }
+        // Adicionar tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Variáveis para o sistema de roteiro
+        let itineraryMode = false;
+        let itineraryPoints = [];
+        let itineraryMarkers = [];
+        let itineraryRoute = null;
+        let currentTransportMode = 'driving-car'; // 'driving-car', 'foot-walking', 'cycling-regular', 'motorcycle'
+        
+        // Sistema de Favoritos
+        let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        let favoriteMarkers = [];
+
+        // Controle de camadas
+        const layers = {};
+        const layerNames = {
+            'cachoeiras': 'Cachoeiras',
+            'hoteis': 'Hotéis',
+            'restaurantes': 'Restaurantes'
+        };
+
+        // Função para gerar avaliação simulada
+        function generateRating(establishmentName) {
+            const ratings = {
+                'Cachoeira Véu de Noiva': { rating: 4.8, reviews: 1247 },
+                'Cachoeira do Pulo': { rating: 4.6, reviews: 892 },
+                'Cachoeira do Salgadeiro': { rating: 4.4, reviews: 567 },
+                'Hotel Chapada dos Guimarães': { rating: 4.7, reviews: 234 },
+                'Pousada Serra Azul': { rating: 4.5, reviews: 189 },
+                'Restaurante Chapada': { rating: 4.3, reviews: 456 },
+                'Cantinho da Serra': { rating: 4.6, reviews: 312 }
+            };
+            
+            return ratings[establishmentName] || { 
+                rating: (Math.random() * 2 + 3).toFixed(1), 
+                reviews: Math.floor(Math.random() * 500 + 50) 
+            };
         }
 
-        // Função para criar popup detalhado com informações da tabela de atributos
-        function createDetailedPopupContent(layerName, feature) {
-            const properties = feature.properties;
-            let content = '<div class="popup-content">';
+        // Função para criar estrelas
+        function createStars(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
             
-            // Título baseado no tipo de camada
-            let title = '';
-            let icon = '';
+            let stars = '';
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star"></i>';
+            }
+            if (hasHalfStar) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            }
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+            return stars;
+        }
+
+        // Função para gerar informações de acessibilidade
+        function generateAccessibilityInfo(establishmentName) {
+            const accessibilityData = {
+                'Hotel Chapada dos Guimarães': { wheelchair: true, visual: true, hearing: false },
+                'Pousada Serra Azul': { wheelchair: false, visual: true, hearing: true },
+                'Restaurante Chapada': { wheelchair: true, visual: false, hearing: false },
+                'Cantinho da Serra': { wheelchair: false, visual: false, hearing: false }
+            };
             
-            switch(layerName) {
-                case 'municipio':
-                    title = 'Município';
-                    icon = '🏛️';
-                    break;
-                case 'cachoeiras':
-                    title = 'Cachoeira';
-                    icon = '💧';
-                    break;
-                case 'hoteis':
-                    title = 'Hotel/Pousada';
-                    icon = '🏨';
-                    break;
-                case 'restaurantes':
-                    title = 'Restaurante';
-                    icon = '🍽️';
-                    break;
+            return accessibilityData[establishmentName] || {
+                wheelchair: Math.random() > 0.5,
+                visual: Math.random() > 0.5,
+                hearing: Math.random() > 0.5
+            };
+        }
+
+        // Função para gerar informações sobre pets
+        function generatePetFriendlyInfo(establishmentName) {
+            const petData = {
+                'Hotel Chapada dos Guimarães': { petsAllowed: true, petFee: 50 },
+                'Pousada Serra Azul': { petsAllowed: false, petFee: 0 },
+                'Restaurante Chapada': { petsAllowed: false, petFee: 0 },
+                'Cantinho da Serra': { petsAllowed: true, petFee: 30 }
+            };
+            
+            return petData[establishmentName] || {
+                petsAllowed: Math.random() > 0.5,
+                petFee: Math.random() > 0.5 ? Math.floor(Math.random() * 50 + 20) : 0
+            };
+        }
+
+        // Função para gerar informações de preços
+        function generatePriceInfo(establishmentName, layerName) {
+            const hash = establishmentName.split('').reduce((a, b) => {
+                a = ((a << 5) - a) + b.charCodeAt(0);
+                return a & a;
+            }, 0);
+            
+            if (layerName === 'hoteis') {
+                const priceRanges = [
+                    { min: 80, max: 150, category: 'Econômico' },
+                    { min: 150, max: 300, category: 'Médio' },
+                    { min: 300, max: 600, category: 'Alto' },
+                    { min: 600, max: 1200, category: 'Luxo' }
+                ];
+                
+                const selectedRange = priceRanges[Math.abs(hash) % priceRanges.length];
+                const price = Math.floor(Math.random() * (selectedRange.max - selectedRange.min + 1)) + selectedRange.min;
+                
+                return {
+                    price: price,
+                    category: selectedRange.category,
+                    type: 'diária',
+                    currency: 'R$'
+                };
+            } else if (layerName === 'restaurantes') {
+                const priceRanges = [
+                    { min: 15, max: 35, category: 'Econômico' },
+                    { min: 35, max: 70, category: 'Médio' },
+                    { min: 70, max: 120, category: 'Alto' },
+                    { min: 120, max: 200, category: 'Gourmet' }
+                ];
+                
+                const selectedRange = priceRanges[Math.abs(hash) % priceRanges.length];
+                const price = Math.floor(Math.random() * (selectedRange.max - selectedRange.min + 1)) + selectedRange.min;
+                
+                return {
+                    price: price,
+                    category: selectedRange.category,
+                    type: 'por pessoa',
+                    currency: 'R$'
+                };
+            } else if (layerName === 'cachoeiras') {
+                // Algumas cachoeiras são gratuitas, outras cobram entrada
+                const isFree = (Math.abs(hash) % 3) === 0; // 33% de chance de ser gratuita
+                
+                if (isFree) {
+                    return {
+                        price: 0,
+                        category: 'Gratuita',
+                        type: 'entrada',
+                        currency: 'R$'
+                    };
+                } else {
+                    const priceRanges = [
+                        { min: 5, max: 15, category: 'Baixo' },
+                        { min: 15, max: 30, category: 'Médio' },
+                        { min: 30, max: 50, category: 'Alto' }
+                    ];
+                    
+                    const selectedRange = priceRanges[Math.abs(hash) % priceRanges.length];
+                    const price = Math.floor(Math.random() * (selectedRange.max - selectedRange.min + 1)) + selectedRange.min;
+                    
+                    return {
+                        price: price,
+                        category: selectedRange.category,
+                        type: 'entrada',
+                        currency: 'R$'
+                    };
+                }
             }
             
-            content += `<div class="popup-header">
-                <h3>${icon} ${title}</h3>
-            </div>`;
+            return null;
+        }
+
+        // Função para criar ícones de preços
+        function createPriceIcons(priceInfo) {
+            if (!priceInfo) return '';
             
-            // Informações específicas para cada tipo de camada
-            if (layerName === 'municipio') {
-                content += `
-                    <div class="popup-info">
-                        <p><strong>Nome:</strong> ${properties.MUNICIPIO || 'N/A'}</p>
-                        <p><strong>Código IBGE:</strong> ${properties.COD_IBGE || 'N/A'}</p>
-                        <p><strong>Estado:</strong> ${properties.ESTADO || 'N/A'}</p>
-                        <p><strong>Área:</strong> ${properties.AREA_HA ? (properties.AREA_HA / 100).toFixed(2) + ' km²' : 'N/A'}</p>
-                        <p><strong>Lei de Criação:</strong> ${properties.LEI || 'N/A'}</p>
-                        <p><strong>Data da Lei:</strong> ${properties.DATA_LEI || 'N/A'}</p>
-                        <p><strong>Fonte:</strong> ${properties.FONTE || 'N/A'}</p>
-                    </div>
-                `;
+            let priceColor;
+            let priceText;
+            
+            if (priceInfo.price === 0) {
+                // Cachoeira gratuita
+                priceColor = '#27ae60';
+                priceText = 'Gratuita';
             } else {
-                // Para pontos (cachoeiras, hotéis, restaurantes)
+                // Estabelecimentos com preço
+                priceColor = priceInfo.category === 'Econômico' || priceInfo.category === 'Baixo' ? '#27ae60' : 
+                            priceInfo.category === 'Médio' ? '#f39c12' : 
+                            priceInfo.category === 'Alto' ? '#e67e22' : '#e74c3c';
+                priceText = `${priceInfo.currency} ${priceInfo.price} ${priceInfo.type}`;
+            }
+            
+            return `
+                <div class="price-info">
+                    <span style="color: ${priceColor}; font-weight: 600; font-size: 14px;">
+                        <i class="fas fa-tag" style="margin-right: 5px;"></i>
+                        ${priceText}
+                    </span>
+                    <span style="color: #666; font-size: 12px; margin-left: 8px;">
+                        (${priceInfo.category})
+                    </span>
+                </div>
+            `;
+        }
+
+        // Função para gerar informações de trilha
+        function generateTrailInfo(waterfallName) {
+            const trailData = {
+                'Cachoeira Véu de Noiva': { difficulty: 'Fácil', duration: 15, distance: 0.5 },
+                'Cachoeira do Pulo': { difficulty: 'Médio', duration: 45, distance: 2.0 },
+                'Cachoeira do Salgadeiro': { difficulty: 'Difícil', duration: 90, distance: 3.5 }
+            };
+            
+            return trailData[waterfallName] || {
+                difficulty: ['Fácil', 'Médio', 'Difícil'][Math.floor(Math.random() * 3)],
+                duration: Math.floor(Math.random() * 60 + 20),
+                distance: (Math.random() * 3 + 0.5).toFixed(1)
+            };
+        }
+
+        // Função para criar ícones de acessibilidade
+        function createAccessibilityIcons(accessibilityInfo) {
+            let icons = '';
+            
+            if (accessibilityInfo.wheelchair) {
+                icons += '<i class="fas fa-wheelchair" style="color: #27ae60;" title="Acessível para cadeirantes"></i>';
+            } else {
+                icons += '<i class="fas fa-times-circle" style="color: #e74c3c;" title="Não acessível para cadeirantes"></i>';
+            }
+            
+            if (accessibilityInfo.visual) {
+                icons += '<i class="fas fa-eye" style="color: #27ae60;" title="Acessível para deficientes visuais"></i>';
+            } else {
+                icons += '<i class="fas fa-times-circle" style="color: #e74c3c;" title="Não acessível para deficientes visuais"></i>';
+            }
+            
+            if (accessibilityInfo.hearing) {
+                icons += '<i class="fas fa-deaf" style="color: #27ae60;" title="Acessível para deficientes auditivos"></i>';
+            } else {
+                icons += '<i class="fas fa-times-circle" style="color: #e74c3c;" title="Não acessível para deficientes auditivos"></i>';
+            }
+            
+            return icons;
+        }
+
+        // Função para criar ícones de pet-friendly
+        function createPetFriendlyIcons(petInfo) {
+            let icons = '';
+            
+            if (petInfo.petsAllowed) {
+                icons += '<i class="fas fa-paw" style="color: #27ae60;" title="Pets permitidos"></i>';
+                if (petInfo.petFee > 0) {
+                    icons += `<i class="fas fa-dollar-sign" style="color: #f39c12;" title="Taxa para pets: R$ ${petInfo.petFee}"></i>`;
+                }
+            } else {
+                icons += '<i class="fas fa-ban" style="color: #e74c3c;" title="Pets não permitidos"></i>';
+            }
+            
+            return icons;
+        }
+
+        // Função para criar ícones de trilha
+        function createTrailIcons(trailInfo) {
+            let icons = '';
+            
+            // Ícone de dificuldade
+            const difficultyColors = {
+                'Fácil': '#27ae60',
+                'Médio': '#f39c12',
+                'Difícil': '#e74c3c'
+            };
+            
+            icons += `<i class="fas fa-mountain" style="color: ${difficultyColors[trailInfo.difficulty]};" title="Dificuldade: ${trailInfo.difficulty}"></i>`;
+            
+            // Ícone de duração
+            icons += `<i class="fas fa-clock" style="color: #3498db;" title="Duração: ${trailInfo.duration} min"></i>`;
+            
+            // Ícone de distância
+            icons += `<i class="fas fa-route" style="color: #9b59b6;" title="Distância: ${trailInfo.distance} km"></i>`;
+            
+            return icons;
+        }
+
+        // Função para criar conteúdo detalhado do popup
+        function createDetailedPopupContent(feature, layerName) {
+            const properties = feature.properties;
+            const establishmentName = properties.Name || properties.name || 'Local';
+            
+            let content = `<div class="popup-header">${establishmentName}</div>`;
+            
+            if (feature.geometry.type === 'Polygon') {
                 content += `
                     <div class="popup-info">
-                        <p><strong>Nome:</strong> ${properties.Name || 'N/A'}</p>
+                        <p><strong>Nome:</strong> ${establishmentName}</p>
                         ${properties.snippet ? `<p><strong>Localização:</strong> ${properties.snippet}</p>` : ''}
                         ${properties.placepageU ? `<p><strong>Link Google:</strong> <a href="${properties.placepageU}" target="_blank">Ver no Google</a></p>` : ''}
                     </div>
                 `;
+            } else {
+                const rating = generateRating(establishmentName);
+                const stars = createStars(rating.rating);
+                
+                let additionalInfo = '';
+                
+                if (layerName === 'hoteis' || layerName === 'restaurantes') {
+                    const accessibilityInfo = generateAccessibilityInfo(establishmentName);
+                    const petInfo = generatePetFriendlyInfo(establishmentName);
+                    const priceInfo = generatePriceInfo(establishmentName, layerName);
+                    const accessibilityIcons = createAccessibilityIcons(accessibilityInfo);
+                    const petFriendlyIcons = createPetFriendlyIcons(petInfo);
+                    const priceIcons = createPriceIcons(priceInfo);
+                    
+                    additionalInfo = `
+                        <div class="additional-info-section">
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-tag" style="color: #2c3e50; margin-right: 5px;"></i>Preços:</span>
+                                ${priceIcons}
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-universal-access" style="color: #2c3e50; margin-right: 5px;"></i>Acessibilidade:</span>
+                                ${accessibilityIcons}
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-paw" style="color: #2c3e50; margin-right: 5px;"></i>Pets:</span>
+                                ${petFriendlyIcons}
+                            </div>
+                        </div>
+                    `;
+                } else if (layerName === 'cachoeiras') {
+                    const trailInfo = generateTrailInfo(establishmentName);
+                    const priceInfo = generatePriceInfo(establishmentName, layerName);
+                    const trailIcons = createTrailIcons(trailInfo);
+                    const priceIcons = createPriceIcons(priceInfo);
+                    
+                    additionalInfo = `
+                        <div class="additional-info-section">
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-tag" style="color: #2c3e50; margin-right: 5px;"></i>Entrada:</span>
+                                ${priceIcons}
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-mountain" style="color: #2c3e50; margin-right: 5px;"></i>Trilha:</span>
+                                ${trailIcons}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                content += `
+                    <div class="popup-info">
+                        <p><strong>Nome:</strong> ${establishmentName}</p>
+                        ${properties.snippet ? `<p><strong>Localização:</strong> ${properties.snippet}</p>` : ''}
+                        <div class="rating-section">
+                            <p><strong>Avaliação Google:</strong></p>
+                            <div class="stars-container">
+                                ${stars}
+                                <span class="rating-text">${rating.rating} (${rating.reviews} avaliações)</span>
+                            </div>
+                        </div>
+                        ${properties.placepageU ? `<p><strong>Link Google:</strong> <a href="${properties.placepageU}" target="_blank">Ver no Google</a></p>` : ''}
+                        ${additionalInfo}
+                    </div>
+                `;
             }
             
-            content += '</div>';
+            // Adicionar botão de favorito
+            const isFav = isFavorite({ name: establishmentName, layerName: layerName });
+            const favoriteBtnClass = isFav ? 'favorite-btn active' : 'favorite-btn';
+            const favoriteBtnIcon = isFav ? 'fas fa-heart' : 'far fa-heart';
+            const favoriteBtnText = isFav ? 'Remover dos Favoritos' : 'Adicionar aos Favoritos';
+            
+            content += `
+                <div class="popup-actions">
+                    <button class="${favoriteBtnClass}" onclick="toggleFavorite('${establishmentName}', '${layerName}', ${feature.geometry.coordinates[1]}, ${feature.geometry.coordinates[0]})">
+                        <i class="${favoriteBtnIcon}"></i> ${favoriteBtnText}
+                    </button>
+                </div>
+            `;
+            
             return content;
         }
 
-        // Função para atualizar contagem de features na interface
-        function updateLayerCount(layerName, count) {
-            const layerItem = document.querySelector(`[data-layer="${layerName}"]`);
-            if (layerItem) {
-                const countElement = layerItem.querySelector('.layer-count');
-                if (countElement) {
-                    if (layerName === 'municipio') {
-                        countElement.textContent = '1 polígono';
-                    } else {
-                        countElement.textContent = `${count} pontos`;
-                    }
-                }
-            }
+        // Função para calcular distância entre dois pontos
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Raio da Terra em km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                     Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
         }
 
-        // Controle de camadas
-        document.querySelectorAll('.layer-item').forEach(item => {
-            const layerName = item.dataset.layer;
-            const toggle = item.querySelector('.toggle-switch');
-            
-            toggle.addEventListener('click', function() {
-                this.classList.toggle('active');
-                
-                if (this.classList.contains('active')) {
-                    if (layers[layerName]) {
-                        map.addLayer(layers[layerName]);
-                        // Reorganizar ordem após adicionar camada
-                        reorganizeLayers();
-                    }
-                } else {
-                    if (layers[layerName]) {
-                        map.removeLayer(layers[layerName]);
-                    }
-                }
-            });
-        });
+        // Função para verificar se dois pontos estão próximos (mesma via)
+        function arePointsNearby(lat1, lon1, lat2, lon2, threshold = 0.1) {
+            const distance = calculateDistance(lat1, lon1, lat2, lon2);
+            return distance < threshold; // 100m de tolerância
+        }
 
-        // Carregar todos os dados
-        async function loadAllData() {
-            const loadingElement = document.getElementById('loading');
+        // Função para calcular rota com retorno na mesma via quando necessário
+        async function calculateRouteWithReturn(points, transportMode) {
+            if (points.length < 2) return null;
             
             try {
-                console.log('Iniciando carregamento das 4 camadas...');
+                // Verificar se há pontos próximos que podem usar a mesma via
+                let optimizedPoints = [...points];
+                let returnSegments = [];
                 
-                // Carregar cada camada individualmente para melhor controle de erros
-                const loadPromises = [
-                    loadGeoJSON('municipio', 'municipio.geojson').catch(err => {
-                        console.error('Erro ao carregar município:', err);
-                        return null;
-                    }),
-                    loadGeoJSON('cachoeiras', 'cachoeiras.geojson').catch(err => {
-                        console.error('Erro ao carregar cachoeiras:', err);
-                        return null;
-                    }),
-                    loadGeoJSON('hoteis', 'hoteis.geojson').catch(err => {
-                        console.error('Erro ao carregar hotéis:', err);
-                        return null;
-                    }),
-                    loadGeoJSON('restaurantes', 'restaurantes.geojson').catch(err => {
-                        console.error('Erro ao carregar restaurantes:', err);
-                        return null;
-                    })
-                ];
-                
-                await Promise.allSettled(loadPromises);
-                
-                console.log('Carregamento concluído!');
-                console.log('Camadas carregadas:', Object.keys(layers));
-                
-                // Ocultar loading
-                loadingElement.style.display = 'none';
-                
-                // Reorganizar ordem das camadas - município por baixo
-                reorganizeLayers();
-                
-                // Ajustar view para mostrar todos os dados
-                const bounds = L.latLngBounds();
-                Object.values(layers).forEach(layer => {
-                    if (layer && layer.eachLayer) {
-                        layer.eachLayer(function(layer) {
-                            if (layer.getBounds) {
-                                bounds.extend(layer.getBounds());
-                            } else if (layer.getLatLng) {
-                                bounds.extend(layer.getLatLng());
-                            }
+                for (let i = 0; i < points.length - 1; i++) {
+                    const currentPoint = points[i];
+                    const nextPoint = points[i + 1];
+                    
+                    // Verificar se o próximo ponto está próximo do ponto atual
+                    if (arePointsNearby(currentPoint.lat, currentPoint.lng, nextPoint.lat, nextPoint.lng)) {
+                        console.log(`Pontos ${i + 1} e ${i + 2} estão próximos - considerando retorno na mesma via`);
+                        
+                        // Adicionar segmento de retorno
+                        returnSegments.push({
+                            from: currentPoint,
+                            to: nextPoint,
+                            type: 'return'
                         });
                     }
+                }
+                
+                // Calcular rota principal
+                const mainRoute = await calculateRealRoute(optimizedPoints, transportMode);
+                
+                if (mainRoute && returnSegments.length > 0) {
+                    console.log(`Adicionando ${returnSegments.length} segmentos de retorno`);
+                    
+                    // Adicionar segmentos de retorno à geometria
+                    let combinedGeometry = mainRoute.features[0].geometry;
+                    
+                    returnSegments.forEach(segment => {
+                        // Adicionar linha de retorno (mesma cor, mas tracejada diferente)
+                        const returnLine = {
+                            type: 'LineString',
+                            coordinates: [
+                                [segment.from.lng, segment.from.lat],
+                                [segment.to.lng, segment.to.lat]
+                            ]
+                        };
+                        
+                        // Combinar geometrias
+                        if (combinedGeometry.type === 'LineString') {
+                            combinedGeometry.coordinates = [
+                                ...combinedGeometry.coordinates,
+                                ...returnLine.coordinates
+                            ];
+                        }
+                    });
+                    
+                    return {
+                        ...mainRoute,
+                        features: [{
+                            ...mainRoute.features[0],
+                            geometry: combinedGeometry
+                        }]
+                    };
+                }
+                
+                return mainRoute;
+            } catch (error) {
+                console.error('Erro ao calcular rota com retorno:', error);
+                return null;
+            }
+        }
+
+        // Função para calcular distância total do roteiro
+        function calculateTotalDistance() {
+            if (itineraryPoints.length < 2) return 0;
+            
+            let totalDistance = 0;
+            for (let i = 0; i < itineraryPoints.length - 1; i++) {
+                const point1 = itineraryPoints[i];
+                const point2 = itineraryPoints[i + 1];
+                totalDistance += calculateDistance(
+                    point1.lat, point1.lng,
+                    point2.lat, point2.lng
+                );
+            }
+            return totalDistance;
+        }
+
+        // Função para calcular rota real usando OSRM (Open Source Routing Machine)
+        async function calculateRealRoute(points, transportMode) {
+            if (points.length < 2) return null;
+            
+            try {
+                const coordinates = points.map(point => [point.lng, point.lat]);
+                console.log('Coordenadas para roteamento:', coordinates);
+                
+                // Converter modo de transporte para OSRM
+                const osrmProfile = {
+                    'driving-car': 'driving',
+                    'foot-walking': 'foot-walking',
+                    'cycling-regular': 'cycling',
+                    'motorcycle': 'driving'
+                }[transportMode] || 'driving';
+                
+                // Construir URL do OSRM com parâmetros otimizados
+                const coordsString = coordinates.map(coord => coord.join(',')).join(';');
+                const osrmUrl = `https://router.project-osrm.org/route/v1/${osrmProfile}/${coordsString}?overview=full&geometries=geojson&steps=true&annotations=true&continue_straight=true&alternatives=false`;
+                
+                console.log('Tentando OSRM:', osrmUrl);
+                
+                const response = await fetch(osrmUrl);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Rota calculada com OSRM:', data);
+                    
+                    if (data.routes && data.routes.length > 0) {
+                        const route = data.routes[0];
+                        
+                        // Melhorar a geometria da rota adicionando segmentos finais precisos
+                        let improvedGeometry = route.geometry;
+                        
+                        // Adicionar segmentos finais para conectar pontos fora da estrada
+                        if (route.legs && route.legs.length > 0) {
+                            const legs = route.legs;
+                            
+                            // Para cada perna da rota, verificar se precisa de segmento final
+                            for (let i = 0; i < legs.length; i++) {
+                                const leg = legs[i];
+                                const startPoint = coordinates[i];
+                                const endPoint = coordinates[i + 1];
+                                
+                                // Calcular distância entre o ponto final da rota e o ponto de destino
+                                const routeEndPoint = leg.steps[leg.steps.length - 1].maneuver.location;
+                                const distanceToDestination = calculateDistance(
+                                    routeEndPoint[1], routeEndPoint[0],
+                                    endPoint[1], endPoint[0]
+                                );
+                                
+                                // Se a distância for significativa (> 50m), adicionar segmento final
+                                if (distanceToDestination > 0.05) {
+                                    console.log(`Adicionando segmento final de ${(distanceToDestination * 1000).toFixed(0)}m para conectar ao ponto exato`);
+                                    
+                                    // Adicionar ponto final à geometria
+                                    if (improvedGeometry.coordinates.length > 0) {
+                                        improvedGeometry.coordinates.push(endPoint);
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Converter formato do OSRM para o formato esperado
+                        return {
+                            type: 'FeatureCollection',
+                            features: [{
+                                type: 'Feature',
+                                properties: {
+                                    segments: [{
+                                        distance: route.distance,
+                                        duration: route.duration,
+                                        steps: route.legs[0].steps.map(step => ({
+                                            instruction: step.maneuver.instruction
+                                        }))
+                                    }]
+                                },
+                                geometry: improvedGeometry
+                            }]
+                        };
+                    } else {
+                        throw new Error('OSRM não retornou rotas válidas');
+                    }
+                } else {
+                    const errorText = await response.text();
+                    console.error('OSRM falhou:', response.status, errorText);
+                    throw new Error(`OSRM falhou: ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Erro ao calcular rota:', error);
+                return null;
+            }
+        }
+
+        // Função para obter tempo estimado baseado no modo de transporte
+        function getEstimatedTime(distance, transportMode) {
+            const speeds = {
+                'driving-car': 60, // km/h - carro
+                'foot-walking': 5, // km/h - a pé
+                'cycling-regular': 15, // km/h - bicicleta
+                'motorcycle': 50 // km/h - moto
+            };
+            
+            const speed = speeds[transportMode] || 60;
+            return Math.round((distance / speed) * 60); // tempo em minutos
+        }
+
+        // Função para obter nome do modo de transporte
+        function getTransportModeName(mode) {
+            const modeNames = {
+                'driving-car': 'Carro',
+                'foot-walking': 'A pé',
+                'cycling-regular': 'Bicicleta',
+                'motorcycle': 'Moto'
+            };
+            return modeNames[mode] || 'Carro';
+        }
+
+        // Função para mostrar detalhes da rota
+        function showRouteDetails(routeData) {
+            const routeDetails = document.getElementById('routeDetails');
+            const routeSteps = document.getElementById('routeSteps');
+            
+            if (routeData && routeData.features && routeData.features.length > 0) {
+                const route = routeData.features[0];
+                const segments = route.properties.segments;
+                
+                let stepsHtml = '';
+                segments.forEach((segment, index) => {
+                    const distance = (segment.distance / 1000).toFixed(1);
+                    const duration = Math.round(segment.duration / 60);
+                    
+                    stepsHtml += `
+                        <div class="route-step">
+                            <div class="step-instruction">${segment.steps[0].instruction || 'Seguir rota'}</div>
+                            <div class="step-distance">${distance} km • ${duration} min</div>
+                        </div>
+                    `;
                 });
                 
-                if (!bounds.isEmpty()) {
-                    map.fitBounds(bounds, { padding: [20, 20] });
+                routeSteps.innerHTML = stepsHtml;
+                routeDetails.style.display = 'block';
+            }
+        }
+
+        // Função para esconder detalhes da rota
+        function hideRouteDetails() {
+            const routeDetails = document.getElementById('routeDetails');
+            routeDetails.style.display = 'none';
+        }
+
+        // Função para atualizar o resumo do roteiro
+        async function updateItinerarySummary() {
+            const totalPoints = itineraryPoints.length;
+            
+            if (totalPoints > 0) {
+                document.getElementById('itinerarySummary').style.display = 'block';
+                document.getElementById('totalPoints').textContent = totalPoints;
+                document.getElementById('currentMode').textContent = getTransportModeName(currentTransportMode);
+                
+                if (totalPoints >= 2) {
+                    // Calcular rota real com otimizações
+                    const routeData = await calculateRouteWithReturn(itineraryPoints, currentTransportMode);
+                    
+                    if (routeData && routeData.features && routeData.features.length > 0) {
+                        const route = routeData.features[0];
+                        const properties = route.properties;
+                        
+                        // Calcular distância total incluindo segmentos finais e retornos
+                        let totalRealDistance = properties.segments[0].distance;
+                        
+                        // Adicionar distância dos segmentos finais se houver
+                        if (route.geometry && route.geometry.coordinates) {
+                            const coords = route.geometry.coordinates;
+                            for (let i = 0; i < coords.length - 1; i++) {
+                                const segmentDistance = calculateDistance(
+                                    coords[i][1], coords[i][0],
+                                    coords[i + 1][1], coords[i + 1][0]
+                                ) * 1000; // converter para metros
+                                totalRealDistance += segmentDistance;
+                            }
+                        }
+                        
+                        const realDistance = (totalRealDistance / 1000).toFixed(1); // converter para km
+                        const realTime = getEstimatedTime(realDistance, currentTransportMode);
+                        
+                        document.getElementById('totalDistance').textContent = realDistance + ' km';
+                        document.getElementById('estimatedTime').textContent = realTime + ' min';
+                        
+                        // Mostrar detalhes da rota
+                        showRouteDetails(routeData);
+                    } else {
+                        // Fallback para cálculo simples
+                        const totalDistance = calculateTotalDistance();
+                        const estimatedTime = getEstimatedTime(totalDistance, currentTransportMode);
+                        
+                        document.getElementById('totalDistance').textContent = totalDistance.toFixed(1) + ' km';
+                        document.getElementById('estimatedTime').textContent = estimatedTime + ' min';
+                        hideRouteDetails();
+                    }
+                } else {
+                    document.getElementById('totalDistance').textContent = '0 km';
+                    document.getElementById('estimatedTime').textContent = '0 min';
+                    hideRouteDetails();
+                }
+            } else {
+                document.getElementById('itinerarySummary').style.display = 'none';
+            }
+        }
+
+        // Função para adicionar ponto ao roteiro
+        function addToItinerary(point, layerName) {
+            if (!itineraryMode) return;
+            
+            const pointInfo = {
+                id: Date.now(),
+                name: point.properties.Name || point.properties.name || 'Local',
+                type: layerNames[layerName] || 'Local',
+                lat: point.geometry.coordinates[1],
+                lng: point.geometry.coordinates[0],
+                layerName: layerName
+            };
+            
+            itineraryPoints.push(pointInfo);
+            updateItineraryDisplay();
+            updateItineraryRoute();
+            updateItinerarySummary();
+        }
+
+        // Função para remover ponto do roteiro
+        function removeFromItinerary(id) {
+            itineraryPoints = itineraryPoints.filter(point => point.id !== id);
+            updateItineraryDisplay();
+            updateItineraryRoute();
+            updateItinerarySummary();
+        }
+
+        // Função para atualizar a exibição do roteiro
+        function updateItineraryDisplay() {
+            const itineraryList = document.getElementById('itineraryList');
+            
+            if (itineraryPoints.length === 0) {
+                itineraryList.innerHTML = `
+                    <div style="text-align: center; color: rgba(255,255,255,0.7); font-size: 12px; padding: 20px;">
+                        Clique em "Adicionar" e depois nos pontos do mapa para criar seu roteiro
+                    </div>
+                `;
+                return;
+            }
+            
+            itineraryList.innerHTML = itineraryPoints.map((point, index) => `
+                <div class="itinerary-item">
+                    <div class="itinerary-item-info">
+                        <div class="itinerary-item-name">${point.name}</div>
+                        <div class="itinerary-item-type">${point.type} • Ponto ${index + 1}</div>
+                    </div>
+                    <div class="itinerary-item-actions">
+                        <button class="itinerary-action-btn remove" onclick="removeFromItinerary(${point.id})" title="Remover">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Atualizar tabela se estiver visível
+            const tableSection = document.getElementById('itineraryTableSection');
+            if (tableSection.style.display !== 'none') {
+                updateItineraryTable();
+            }
+        }
+
+        // Função para atualizar a rota do roteiro
+        async function updateItineraryRoute() {
+            // Remover rota anterior
+            if (itineraryRoute) {
+                map.removeLayer(itineraryRoute);
+                itineraryRoute = null;
+            }
+            
+            // Remover marcadores anteriores
+            itineraryMarkers.forEach(marker => map.removeLayer(marker));
+            itineraryMarkers = [];
+            
+            if (itineraryPoints.length === 0) return;
+            
+            // Adicionar apenas marcadores numerados (sem linha conectora)
+            itineraryPoints.forEach((point, index) => {
+                const marker = L.marker([point.lat, point.lng], {
+                    icon: L.divIcon({
+                        html: `<div style="background: #4CAF50; color: white; border: 2px solid white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">${index + 1}</div>`,
+                        className: 'itinerary-marker',
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 15]
+                    })
+                }).addTo(map);
+                
+                itineraryMarkers.push(marker);
+            });
+            
+            // Não criar linha conectora - apenas os marcadores numerados
+            console.log('Marcadores numerados adicionados sem linha conectora');
+        }
+
+        // Função para limpar roteiro
+        function clearItinerary() {
+            itineraryPoints = [];
+            if (itineraryRoute) {
+                map.removeLayer(itineraryRoute);
+                itineraryRoute = null;
+            }
+            itineraryMarkers.forEach(marker => map.removeLayer(marker));
+            itineraryMarkers = [];
+            
+            // Esconder botão de finalizar se não há pontos
+            const finalizeButton = document.getElementById('finalizeItinerary');
+            if (finalizeButton) {
+                finalizeButton.style.display = 'none';
+            }
+            
+            updateItineraryDisplay();
+            updateItinerarySummary();
+            updateItineraryTable();
+        }
+
+        // Função para atualizar a tabela de roteiro
+        async function updateItineraryTable() {
+            const tableBody = document.getElementById('itineraryTableBody');
+            const tableSection = document.getElementById('itineraryTableSection');
+            
+            if (itineraryPoints.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: rgba(255,255,255,0.7);">Nenhum ponto adicionado ao roteiro</td></tr>';
+                return;
+            }
+            
+            let tableHTML = '';
+            let totalStayTime = 0;
+            let totalTravelTime = 0;
+            
+            for (let i = 0; i < itineraryPoints.length; i++) {
+                const point = itineraryPoints[i];
+                const order = i + 1;
+                
+                // Calcular distância e tempo de viagem para o próximo ponto
+                let distance = 0;
+                let travelTime = 0;
+                
+                if (i < itineraryPoints.length - 1) {
+                    const nextPoint = itineraryPoints[i + 1];
+                    distance = calculateDistance(point.lat, point.lng, nextPoint.lat, nextPoint.lng);
+                    
+                    // Tentar obter rota real se houver mais de um ponto
+                    if (itineraryPoints.length > 1) {
+                        const routeData = await calculateRouteWithReturn([point, nextPoint], currentTransportMode);
+                        if (routeData && routeData.features && routeData.features.length > 0) {
+                            const route = routeData.features[0];
+                            if (route.properties && route.properties.segments && route.properties.segments.length > 0) {
+                                distance = (route.properties.segments[0].distance / 1000).toFixed(1); // converter para km
+                                travelTime = Math.round(route.properties.segments[0].duration / 60); // converter para minutos
+                            }
+                        }
+                    }
+                    
+                    totalTravelTime += travelTime;
                 }
                 
-            } catch (error) {
-                console.error('Erro geral ao carregar dados:', error);
-                loadingElement.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erro ao carregar dados';
+                // Gerar informações de preços
+                const priceInfo = generatePriceInfo(point.name, point.layerName);
+                let priceText = 'N/A';
+                if (priceInfo) {
+                    if (priceInfo.price === 0) {
+                        priceText = 'Gratuito';
+                    } else {
+                        priceText = `${priceInfo.currency} ${priceInfo.price}`;
+                        if (point.layerName === 'hoteis') {
+                            priceText += ' diária';
+                        } else if (point.layerName === 'restaurantes') {
+                            priceText += ' pessoa';
+                        } else if (point.layerName === 'cachoeiras') {
+                            priceText += ' entrada';
+                        }
+                    }
+                }
+                
+                // Gerar input para tempo de permanência
+                const stayTimeInput = `<input type="number" class="time-input" value="60" min="15" max="480" step="15" 
+                    onchange="updateStayTime(${i}, this.value)" title="Tempo de permanência em minutos">`;
+                
+                // Gerar informação do próximo ponto
+                let nextPointInfo = 'Fim do roteiro';
+                if (i < itineraryPoints.length - 1) {
+                    const nextPoint = itineraryPoints[i + 1];
+                    nextPointInfo = `${distance} km / ${travelTime} min → ${nextPoint.name}`;
+                }
+                
+                tableHTML += `
+                    <tr>
+                        <td>${order}</td>
+                        <td>${point.name}</td>
+                        <td>${stayTimeInput}</td>
+                        <td class="price-cell">${priceText}</td>
+                        <td class="next-point-cell">${nextPointInfo}</td>
+                    </tr>
+                `;
             }
+            
+            tableBody.innerHTML = tableHTML;
         }
 
-        // Função para reorganizar a ordem das camadas
-        function reorganizeLayers() {
-            // Remover todas as camadas do mapa
+        // Função para atualizar tempo de permanência
+        function updateStayTime(index, value) {
+            // Aqui você pode adicionar lógica para salvar o tempo de permanência
+            console.log(`Tempo de permanência atualizado para ponto ${index + 1}: ${value} minutos`);
+        }
+
+        // Função para exportar roteiro como CSV
+        function exportItineraryToCSV() {
+            if (itineraryPoints.length === 0) {
+                alert('Nenhum ponto adicionado ao roteiro para exportar.');
+                return;
+            }
+
+            let csvContent = 'Ordem,Local,Tempo de Permanência (min),Preços,Próximo Ponto\n';
+            
+            const tableRows = document.querySelectorAll('#itineraryTableBody tr');
+            tableRows.forEach((row, index) => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 5) {
+                    const order = cells[0].textContent.trim();
+                    const location = cells[1].textContent.trim();
+                    const stayTime = cells[2].querySelector('input') ? cells[2].querySelector('input').value : '60';
+                    const price = cells[3].textContent.trim();
+                    const nextPoint = cells[4].textContent.trim();
+                    
+                    csvContent += `${order},"${location}",${stayTime},"${price}","${nextPoint}"\n`;
+                }
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `roteiro_chapada_${new Date().toISOString().slice(0, 10)}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Função para gerar URL do Google Maps
+        function generateGoogleMapsURL() {
+            if (itineraryPoints.length === 0) {
+                alert('Nenhum ponto adicionado ao roteiro para gerar rota no Google Maps.');
+                return;
+            }
+
+            // Construir URL do Google Maps com waypoints
+            let googleMapsURL = 'https://www.google.com/maps/dir/';
+            
+            itineraryPoints.forEach((point, index) => {
+                const coordinates = `${point.lat},${point.lng}`;
+                if (index === 0) {
+                    googleMapsURL += coordinates;
+                } else {
+                    googleMapsURL += '/' + coordinates;
+                }
+            });
+
+            // Adicionar parâmetros para melhor visualização
+            googleMapsURL += '/data=!3m1!4b1!4m2!4m1!3e0'; // Modo de direção por carro
+            
+            return googleMapsURL;
+        }
+
+        // Função para finalizar roteiro
+        function finalizeItinerary() {
+            if (itineraryPoints.length === 0) {
+                alert('Nenhum ponto adicionado ao roteiro para finalizar.');
+                return;
+            }
+
+            // Gerar e abrir Google Maps
+            const googleMapsURL = generateGoogleMapsURL();
+            window.open(googleMapsURL, '_blank');
+            
+            // Mostrar confirmação
+            alert('🗺️ Roteiro enviado para o Google Maps!\n\n✅ Google Maps aberto em nova aba\n📍 Rota criada com todos os pontos do roteiro\n\nAgora você pode usar o Google Maps para navegação.');
+        }
+
+        // Função para gerar imagem da tabela
+        function generateTableImage() {
+            if (itineraryPoints.length === 0) {
+                alert('Nenhum ponto adicionado ao roteiro para gerar imagem.');
+                return;
+            }
+
+            const table = document.getElementById('itineraryTable');
+            if (!table) {
+                alert('Tabela não encontrada.');
+                return;
+            }
+
+            // Mostrar loading
+            const generateButton = document.getElementById('generateTableImage');
+            const originalText = generateButton.innerHTML;
+            generateButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando Imagem...';
+            generateButton.disabled = true;
+
+            // Criar uma cópia da tabela com estilos otimizados para captura
+            const tableClone = table.cloneNode(true);
+            tableClone.style.position = 'absolute';
+            tableClone.style.left = '-9999px';
+            tableClone.style.top = '0';
+            tableClone.style.backgroundColor = '#ffffff';
+            tableClone.style.color = '#000000';
+            tableClone.style.fontFamily = 'Arial, sans-serif';
+            tableClone.style.fontSize = '14px';
+            tableClone.style.border = '1px solid #ddd';
+            tableClone.style.borderCollapse = 'collapse';
+            tableClone.style.width = 'auto';
+            tableClone.style.minWidth = '600px';
+            
+            // Substituir inputs pelos seus valores para captura correta
+            const timeInputs = tableClone.querySelectorAll('input.time-input');
+            timeInputs.forEach((input, index) => {
+                // Obter o valor do input original correspondente
+                const originalInputs = table.querySelectorAll('input.time-input');
+                const originalValue = originalInputs[index] ? originalInputs[index].value : '60';
+                
+                // Criar um span com o valor para melhor formatação
+                const valueSpan = document.createElement('span');
+                valueSpan.textContent = `${originalValue} min`;
+                valueSpan.style.fontWeight = '600';
+                valueSpan.style.color = '#2c3e50';
+                
+                input.parentNode.replaceChild(valueSpan, input);
+            });
+            
+            // Aplicar estilos específicos para captura
+            const cells = tableClone.querySelectorAll('th, td');
+            cells.forEach(cell => {
+                cell.style.padding = '8px 12px';
+                cell.style.border = '1px solid #ddd';
+                cell.style.backgroundColor = cell.tagName === 'TH' ? '#f8f9fa' : '#ffffff';
+                cell.style.color = '#000000';
+                cell.style.textAlign = 'center';
+                cell.style.fontWeight = cell.tagName === 'TH' ? 'bold' : 'normal';
+            });
+
+            // Adicionar a cópia ao DOM temporariamente
+            document.body.appendChild(tableClone);
+
+            // Configurações do html2canvas
+            const options = {
+                backgroundColor: '#ffffff',
+                scale: 2, // Melhor qualidade
+                useCORS: true,
+                allowTaint: true,
+                width: tableClone.offsetWidth,
+                height: tableClone.offsetHeight,
+                scrollX: 0,
+                scrollY: 0,
+                logging: false,
+                removeContainer: true
+            };
+
+            html2canvas(tableClone, options).then(canvas => {
+                // Remover a cópia temporária
+                document.body.removeChild(tableClone);
+
+                // Criar link para download
+                const link = document.createElement('a');
+                link.download = `roteiro_chapada_${new Date().toISOString().slice(0, 10)}.png`;
+                link.href = canvas.toDataURL('image/png');
+                
+                // Criar nova janela para visualizar
+                const newWindow = window.open();
+                newWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>Imagem do Roteiro - Chapada dos Guimarães</title>
+                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+                            <style>
+                                body { 
+                                    margin: 0; 
+                                    padding: 20px; 
+                                    background: #f5f5f5; 
+                                    font-family: Arial, sans-serif;
+                                    text-align: center;
+                                }
+                                .image-container {
+                                    background: white;
+                                    padding: 20px;
+                                    border-radius: 10px;
+                                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                                    display: inline-block;
+                                    margin-bottom: 20px;
+                                    max-width: 90%;
+                                }
+                                .download-btn {
+                                    background: linear-gradient(135deg, #4CAF50, #45a049);
+                                    color: white;
+                                    padding: 12px 24px;
+                                    border: none;
+                                    border-radius: 6px;
+                                    cursor: pointer;
+                                    font-size: 16px;
+                                    text-decoration: none;
+                                    display: inline-block;
+                                    margin: 10px;
+                                    transition: all 0.3s ease;
+                                }
+                                .download-btn:hover {
+                                    background: linear-gradient(135deg, #45a049, #4CAF50);
+                                    transform: translateY(-2px);
+                                    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                                }
+                                .info {
+                                    color: #666;
+                                    margin-top: 20px;
+                                    font-size: 14px;
+                                }
+                                .image-preview {
+                                    border: 2px solid #ddd;
+                                    border-radius: 8px;
+                                    padding: 10px;
+                                    background: white;
+                                    margin: 20px 0;
+                                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                                }
+                                .image-preview img {
+                                    max-width: 100%;
+                                    height: auto;
+                                    border-radius: 5px;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="image-container">
+                                <h2><i class="fas fa-map-marked-alt"></i> Roteiro Detalhado - Chapada dos Guimarães</h2>
+                                <p><strong><i class="fas fa-calendar"></i> Data:</strong> ${new Date().toLocaleDateString('pt-BR')}</p>
+                                <p><strong><i class="fas fa-map-pin"></i> Total de Pontos:</strong> ${itineraryPoints.length}</p>
+                                <p><strong><i class="fas fa-clock"></i> Gerado em:</strong> ${new Date().toLocaleTimeString('pt-BR')}</p>
+                                <hr style="margin: 20px 0; border: none; border-top: 2px solid #eee;">
+                                <div class="image-preview">
+                                    <img src="${canvas.toDataURL('image/png')}" alt="Roteiro Chapada dos Guimarães">
+                                </div>
+                            </div>
+                            <br>
+                            <a href="${canvas.toDataURL('image/png')}" download="${link.download}" class="download-btn">
+                                <i class="fas fa-download"></i> Baixar Imagem
+                            </a>
+                            <a href="${canvas.toDataURL('image/png')}" target="_blank" class="download-btn">
+                                <i class="fas fa-external-link-alt"></i> Abrir em Nova Aba
+                            </a>
+                            <div class="info">
+                                <p><i class="fas fa-check-circle"></i> Imagem gerada com sucesso!</p>
+                                <p><i class="fas fa-mobile-alt"></i> Compatível com dispositivos móveis</p>
+                                <p><i class="fas fa-print"></i> Qualidade alta para impressão</p>
+                                <p><i class="fas fa-share-alt"></i> Perfeita para compartilhamento</p>
+                            </div>
+                        </body>
+                    </html>
+                `);
+                newWindow.document.close();
+
+                // Restaurar botão
+                generateButton.innerHTML = originalText;
+                generateButton.disabled = false;
+
+                // Mostrar confirmação
+                alert('✅ Imagem da tabela gerada com sucesso!\n\n📱 Abra em nova aba para visualizar\n💾 Use o botão "Baixar Imagem" para salvar\n\nA imagem foi aberta em uma nova janela.');
+            }).catch(error => {
+                console.error('Erro ao gerar imagem:', error);
+                
+                // Remover a cópia temporária em caso de erro
+                if (document.body.contains(tableClone)) {
+                    document.body.removeChild(tableClone);
+                }
+                
+                alert('❌ Erro ao gerar imagem da tabela.\n\nTente novamente ou verifique se a tabela está visível.');
+                
+                // Restaurar botão
+                generateButton.innerHTML = originalText;
+                generateButton.disabled = false;
+            });
+        }
+
+        // Função para obter tempo estimado baseado no modo de transporte
+        function getEstimatedTime(distance, transportMode) {
+            const speeds = {
+                'driving-car': 60, // km/h
+                'foot-walking': 5,  // km/h
+                'cycling-regular': 20, // km/h
+                'motorcycle': 50 // km/h
+            };
+            
+            const speed = speeds[transportMode] || 60;
+            const timeInHours = distance / speed;
+            return Math.round(timeInHours * 60); // converter para minutos
+        }
+
+        // Configurações do GeoJSON
+        const geoJsonOptions = {
+            pointToLayer: function(feature, latlng) {
+                const layerName = feature.properties.layer || 'default';
+                const iconConfig = iconConfigs[layerName];
+                
+                if (iconConfig) {
+                    const marker = L.marker(latlng, {
+                        icon: L.divIcon(iconConfig)
+                    });
+                    
+                    // Adicionar tooltip
+                    const name = feature.properties.Name || feature.properties.name || 'Local';
+                    marker.bindTooltip(name, {
+                        className: 'custom-tooltip',
+                        direction: 'top',
+                        offset: [0, -10],
+                        permanent: false
+                    });
+                    
+                    // Armazenar referência do marker para controle de tooltip
+                    marker._name = name;
+                    marker._layerName = layerName;
+                    
+                    // Adicionar popup
+                    const popupContent = createDetailedPopupContent(feature, layerName);
+                    marker.bindPopup(popupContent, {
+                        maxWidth: 300,
+                        className: 'custom-popup'
+                    });
+                    
+                    // Adicionar fechamento automático do popup
+                    marker.on('popupopen', function() {
+                        const closeTime = itineraryMode ? 3000 : 7000; // 3s no modo roteiro, 7s normal
+                        setTimeout(() => {
+                            if (marker.isPopupOpen()) {
+                                marker.closePopup();
+                            }
+                        }, closeTime);
+                    });
+                    
+                    // Adicionar evento para fechar popup quando entrar no modo roteiro
+                    marker.on('click', function() {
+                        if (itineraryMode) {
+                            // Se estiver no modo roteiro, fechar popup após 3s
+                            setTimeout(() => {
+                                if (marker.isPopupOpen()) {
+                                    marker.closePopup();
+                                }
+                            }, 3000);
+                        }
+                    });
+                    
+                    // Adicionar evento de clique para roteiro
+                    marker.on('click', function() {
+                        addToItinerary(feature, layerName);
+                    });
+                    
+                    return marker;
+                }
+                
+                return L.circleMarker(latlng, {
+                    radius: 8,
+                    fillColor: "#ff7800",
+                    color: "#000",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                });
+            }
+        };
+
+        // Carregar dados GeoJSON
+        fetch('cachoeiras.geojson')
+            .then(response => response.json())
+            .then(data => {
+                data.features.forEach(feature => {
+                    feature.properties.layer = 'cachoeiras';
+                });
+                layers.cachoeiras = L.geoJSON(data, geoJsonOptions).addTo(map);
+            });
+
+        fetch('hoteis.geojson')
+            .then(response => response.json())
+            .then(data => {
+                data.features.forEach(feature => {
+                    feature.properties.layer = 'hoteis';
+                });
+                layers.hoteis = L.geoJSON(data, geoJsonOptions).addTo(map);
+            });
+
+        fetch('restaurantes.geojson')
+            .then(response => response.json())
+            .then(data => {
+                data.features.forEach(feature => {
+                    feature.properties.layer = 'restaurantes';
+                });
+                layers.restaurantes = L.geoJSON(data, geoJsonOptions).addTo(map);
+            });
+
+        // Função para controlar exibição de tooltips baseado no zoom e proximidade
+        function updateTooltipsVisibility() {
+            const currentZoom = map.getZoom();
+            const mapCenter = map.getCenter();
+            const mapBounds = map.getBounds();
+            const zoomThreshold = 12; // Zoom mais alto para mostrar tooltips
+            
+            // Calcular área visível do mapa
+            const visibleArea = mapBounds.getNorthEast().distanceTo(mapBounds.getSouthWest());
+            
+            // Percorrer todas as camadas
             Object.values(layers).forEach(layer => {
-                if (layer) {
-                    map.removeLayer(layer);
+                if (layer && layer.getLayers) {
+                    layer.getLayers().forEach(marker => {
+                        if (marker && marker._name) {
+                            const markerLatLng = marker.getLatLng();
+                            const distanceFromCenter = mapCenter.distanceTo(markerLatLng);
+                            
+                            // Critérios para mostrar tooltip:
+                            // 1. Zoom alto (12+)
+                            // 2. Proximidade do centro do mapa
+                            // 3. Área visível não muito grande
+                            const shouldShow = currentZoom >= zoomThreshold && 
+                                            distanceFromCenter < (visibleArea * 0.3) && 
+                                            visibleArea < 50000; // Limitar área visível
+                            
+                            if (shouldShow) {
+                                // Mostrar tooltip se não estiver aberto
+                                if (!marker.isTooltipOpen()) {
+                                    marker.openTooltip();
+                                }
+                            } else {
+                                // Esconder tooltip se estiver aberto
+                                if (marker.isTooltipOpen()) {
+                                    marker.closeTooltip();
+                                }
+                            }
+                        }
+                    });
                 }
             });
-            
-            // Adicionar camadas na ordem correta (município por baixo)
-            const layerOrder = ['municipio', 'cachoeiras', 'hoteis', 'restaurantes'];
-            
-            layerOrder.forEach(layerName => {
-                if (layers[layerName]) {
-                    map.addLayer(layers[layerName]);
-                }
-            });
-            
-            console.log('Ordem das camadas reorganizada: município por baixo');
         }
 
-        // Iniciar carregamento
-        loadAllData();
-
-        // Controle de informações
-        const infoPanel = document.getElementById('infoPanel');
-        const infoTitle = document.getElementById('infoTitle');
-        const infoDescription = document.getElementById('infoDescription');
-
-        // Mostrar informações ao passar o mouse sobre as camadas
-        map.on('mouseover', function(e) {
-            if (e.target.feature && e.target.feature.properties) {
-                const props = e.target.feature.properties;
-                infoTitle.textContent = props.Name || 'Ponto de interesse';
-                infoDescription.textContent = props.snippet || 'Informações não disponíveis';
-                infoPanel.style.display = 'block';
+        // Controles de camadas
+        document.getElementById('cachoeiras').addEventListener('change', function() {
+            if (this.checked) {
+                map.addLayer(layers.cachoeiras);
+                // Atualizar tooltips após adicionar camada
+                setTimeout(updateTooltipsVisibility, 100);
+            } else {
+                map.removeLayer(layers.cachoeiras);
             }
         });
 
-        map.on('mouseout', function(e) {
-            infoPanel.style.display = 'none';
+        document.getElementById('hoteis').addEventListener('change', function() {
+            if (this.checked) {
+                map.addLayer(layers.hoteis);
+                // Atualizar tooltips após adicionar camada
+                setTimeout(updateTooltipsVisibility, 100);
+            } else {
+                map.removeLayer(layers.hoteis);
+            }
         });
 
-        // Controle responsivo para mobile
-        if (window.innerWidth <= 768) {
-            const sidebar = document.querySelector('.sidebar');
-            const toggleButton = document.createElement('button');
-            toggleButton.innerHTML = '<i class="fas fa-bars"></i>';
-            toggleButton.style.cssText = `
-                position: absolute;
-                top: 20px;
-                left: 20px;
-                z-index: 2001;
-                background: rgba(255, 255, 255, 0.9);
-                border: none;
-                padding: 10px;
-                border-radius: 5px;
-                cursor: pointer;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            `;
+        document.getElementById('restaurantes').addEventListener('change', function() {
+            if (this.checked) {
+                map.addLayer(layers.restaurantes);
+                // Atualizar tooltips após adicionar camada
+                setTimeout(updateTooltipsVisibility, 100);
+            } else {
+                map.removeLayer(layers.restaurantes);
+            }
+        });
+
+        // Controles do roteiro
+        document.getElementById('toggleItineraryMode').addEventListener('click', function() {
+            itineraryMode = !itineraryMode;
+            this.classList.toggle('active');
             
-            document.body.appendChild(toggleButton);
+            if (itineraryMode) {
+                this.innerHTML = '<i class="fas fa-check"></i> Modo Ativo';
+                this.style.background = '#4CAF50';
+            } else {
+                this.innerHTML = '<i class="fas fa-plus"></i> Adicionar';
+                this.style.background = 'rgba(255,255,255,0.2)';
+            }
+        });
+
+        document.getElementById('clearItinerary').addEventListener('click', clearItinerary);
+
+        // Event listeners para favoritos
+        document.getElementById('showFavorites').addEventListener('click', function() {
+            // Centralizar no primeiro favorito ou mostrar mensagem
+            if (favorites.length > 0) {
+                const firstFavorite = favorites[0];
+                map.setView([firstFavorite.lat, firstFavorite.lng], 15);
+            } else {
+                alert('Nenhum favorito adicionado ainda!');
+            }
+        });
+
+        document.getElementById('clearFavorites').addEventListener('click', function() {
+            if (favorites.length > 0) {
+                if (confirm('Tem certeza que deseja limpar todos os favoritos?')) {
+                    clearAllFavorites();
+                }
+            } else {
+                alert('Nenhum favorito para limpar!');
+            }
+        });
+
+        // Adicionar eventos para controlar tooltips
+        map.on('zoomend', updateTooltipsVisibility);
+        map.on('moveend', updateTooltipsVisibility);
+        map.on('dragend', updateTooltipsVisibility);
+
+        // Funções para gerenciar favoritos
+        function addToFavorites(point) {
+            const favoriteId = `${point.name}-${point.layerName}`;
+            const existingIndex = favorites.findIndex(f => f.id === favoriteId);
             
-            toggleButton.addEventListener('click', function() {
-                sidebar.classList.toggle('open');
-            });
+            if (existingIndex === -1) {
+                favorites.push({
+                    id: favoriteId,
+                    name: point.name,
+                    type: point.layerName,
+                    lat: point.lat,
+                    lng: point.lng
+                });
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                updateFavoritesList();
+                showFavoriteMarker(point);
+            }
         }
+
+        function removeFromFavorites(favoriteId) {
+            favorites = favorites.filter(f => f.id !== favoriteId);
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            updateFavoritesList();
+            removeFavoriteMarker(favoriteId);
+        }
+
+        function clearAllFavorites() {
+            favorites = [];
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            updateFavoritesList();
+            clearAllFavoriteMarkers();
+        }
+
+        function updateFavoritesList() {
+            const favoritesList = document.getElementById('favoritesList');
+            
+            if (favorites.length === 0) {
+                favoritesList.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.7); font-size: 12px; padding: 20px;">Clique no coração nos popups para adicionar favoritos</div>';
+                return;
+            }
+            
+            let html = '';
+            favorites.forEach(favorite => {
+                const layerIcon = getLayerIcon(favorite.type);
+                html += `
+                    <div class="favorite-item">
+                        <div class="favorite-item-info">
+                            <div class="favorite-item-name">${favorite.name}</div>
+                            <div class="favorite-item-type">${layerIcon} ${getLayerName(favorite.type)}</div>
+                        </div>
+                        <div class="favorite-item-actions">
+                            <button class="favorite-action-btn" onclick="centerOnFavorite('${favorite.id}')" title="Centralizar">
+                                <i class="fas fa-crosshairs"></i>
+                            </button>
+                            <button class="favorite-action-btn remove" onclick="removeFromFavorites('${favorite.id}')" title="Remover">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            favoritesList.innerHTML = html;
+        }
+
+        function getLayerIcon(layerName) {
+            const icons = {
+                'cachoeiras': '<i class="fas fa-water" style="color: #3498db;"></i>',
+                'hoteis': '<i class="fas fa-bed" style="color: #e74c3c;"></i>',
+                'restaurantes': '<i class="fas fa-utensils" style="color: #f39c12;"></i>'
+            };
+            return icons[layerName] || '';
+        }
+
+        function getLayerName(layerName) {
+            const names = {
+                'cachoeiras': 'Cachoeira',
+                'hoteis': 'Hotel',
+                'restaurantes': 'Restaurante'
+            };
+            return names[layerName] || layerName;
+        }
+
+        function centerOnFavorite(favoriteId) {
+            const favorite = favorites.find(f => f.id === favoriteId);
+            if (favorite) {
+                map.setView([favorite.lat, favorite.lng], 15);
+            }
+        }
+
+        function showFavoriteMarker(point) {
+            const favoriteId = `${point.name}-${point.layerName}`;
+            const favorite = favorites.find(f => f.id === favoriteId);
+            
+            if (favorite) {
+                const marker = L.marker([favorite.lat, favorite.lng], {
+                    icon: L.divIcon({
+                        html: '<i class="fas fa-heart" style="color: #e91e63; font-size: 24px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);"></i>',
+                        className: 'favorite-marker',
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 15]
+                    })
+                }).addTo(map);
+                
+                favoriteMarkers.push({ id: favoriteId, marker: marker });
+            }
+        }
+
+        function removeFavoriteMarker(favoriteId) {
+            const markerIndex = favoriteMarkers.findIndex(fm => fm.id === favoriteId);
+            if (markerIndex !== -1) {
+                map.removeLayer(favoriteMarkers[markerIndex].marker);
+                favoriteMarkers.splice(markerIndex, 1);
+            }
+        }
+
+        function clearAllFavoriteMarkers() {
+            favoriteMarkers.forEach(fm => {
+                map.removeLayer(fm.marker);
+            });
+            favoriteMarkers = [];
+        }
+
+        function isFavorite(point) {
+            const favoriteId = `${point.name}-${point.layerName}`;
+            return favorites.some(f => f.id === favoriteId);
+        }
+
+        function toggleFavorite(name, layerName, lat, lng) {
+            const point = { name: name, layerName: layerName, lat: lat, lng: lng };
+            const favoriteId = `${name}-${layerName}`;
+            const existingIndex = favorites.findIndex(f => f.id === favoriteId);
+            
+            if (existingIndex === -1) {
+                // Adicionar aos favoritos
+                addToFavorites(point);
+            } else {
+                // Remover dos favoritos
+                removeFromFavorites(favoriteId);
+            }
+            
+            // Atualizar a lista de favoritos
+            updateFavoritesList();
+        }
+        
+        // Inicializar tooltips baseado no zoom atual
+        setTimeout(updateTooltipsVisibility, 1000);
+        
+        // Inicializar lista de favoritos
+        updateFavoritesList();
+        
+        // Carregar favoritos salvos
+        favorites.forEach(favorite => {
+            showFavoriteMarker(favorite);
+        });
+
+        // Event listener para mostrar/esconder tabela de roteiro
+        document.getElementById('showItineraryTable').addEventListener('click', function() {
+            const tableSection = document.getElementById('itineraryTableSection');
+            const finalizeButton = document.getElementById('finalizeItinerary');
+            const isVisible = tableSection.style.display !== 'none';
+            
+            if (isVisible) {
+                tableSection.style.display = 'none';
+                finalizeButton.style.display = 'none';
+                this.innerHTML = '<i class="fas fa-table"></i> Escolher Roteiro';
+            } else {
+                tableSection.style.display = 'block';
+                finalizeButton.style.display = 'block';
+                this.innerHTML = '<i class="fas fa-eye-slash"></i> Ocultar Roteiro';
+                updateItineraryTable();
+            }
+        });
+
+        // Event listener para finalizar roteiro
+        document.getElementById('finalizeItinerary').addEventListener('click', finalizeItinerary);
+
+        // Event listener para gerar imagem da tabela
+        document.getElementById('generateTableImage').addEventListener('click', generateTableImage);
+
+        // Event listeners para botões de modo de transporte
+        document.querySelectorAll('.transport-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remover classe active de todos os botões
+                document.querySelectorAll('.transport-btn').forEach(b => b.classList.remove('active'));
+                
+                // Adicionar classe active ao botão clicado
+                this.classList.add('active');
+                
+                // Atualizar modo de transporte
+                currentTransportMode = this.dataset.mode;
+                
+                // Atualizar rota e resumo se houver pontos
+                if (itineraryPoints.length >= 2) {
+                    updateItineraryRoute();
+                    updateItinerarySummary();
+                    updateItineraryTable();
+                }
+            });
+        });
     </script>
 </body>
 </html> 
